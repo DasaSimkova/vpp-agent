@@ -61,3 +61,12 @@ linux: Check Ping
     Should Contain     ${out}    from ${ip}
     Should Not Contain    ${out}    100% packet loss
 
+linux: Set Host TAP Interface
+    [Arguments]    ${node}    ${name}    ${ip}    ${prefix}    ${node_network_ip}
+    Log Many    ${node}    ${name}    ${ip}    ${prefix}
+    ${host_if_name}=    Set VAriable    ${name}
+    Log    ${host_if_name}
+    ${out}=    Execute In Container    ${node}    ip link set dev ${host_if_name} up
+    Log    ${out}
+    ${out}=    Execute In Container    ${node}    ip addr add ${ip}/${prefix} dev ${host_if_name}
+    Log    ${out}
